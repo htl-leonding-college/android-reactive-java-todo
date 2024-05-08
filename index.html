@@ -435,6 +435,120 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+pre.rouge table td { padding: 5px; }
+pre.rouge table pre { margin: 0; }
+pre.rouge, pre.rouge .w {
+  color: #24292f;
+  background-color: #f6f8fa;
+}
+pre.rouge .k, pre.rouge .kd, pre.rouge .kn, pre.rouge .kp, pre.rouge .kr, pre.rouge .kt, pre.rouge .kv {
+  color: #cf222e;
+}
+pre.rouge .gr {
+  color: #f6f8fa;
+}
+pre.rouge .gd {
+  color: #82071e;
+  background-color: #ffebe9;
+}
+pre.rouge .nb {
+  color: #953800;
+}
+pre.rouge .nc {
+  color: #953800;
+}
+pre.rouge .no {
+  color: #953800;
+}
+pre.rouge .nn {
+  color: #953800;
+}
+pre.rouge .sr {
+  color: #116329;
+}
+pre.rouge .na {
+  color: #116329;
+}
+pre.rouge .nt {
+  color: #116329;
+}
+pre.rouge .gi {
+  color: #116329;
+  background-color: #dafbe1;
+}
+pre.rouge .kc {
+  color: #0550ae;
+}
+pre.rouge .l, pre.rouge .ld, pre.rouge .m, pre.rouge .mb, pre.rouge .mf, pre.rouge .mh, pre.rouge .mi, pre.rouge .il, pre.rouge .mo, pre.rouge .mx {
+  color: #0550ae;
+}
+pre.rouge .sb {
+  color: #0550ae;
+}
+pre.rouge .bp {
+  color: #0550ae;
+}
+pre.rouge .ne {
+  color: #0550ae;
+}
+pre.rouge .nl {
+  color: #0550ae;
+}
+pre.rouge .py {
+  color: #0550ae;
+}
+pre.rouge .nv, pre.rouge .vc, pre.rouge .vg, pre.rouge .vi, pre.rouge .vm {
+  color: #0550ae;
+}
+pre.rouge .o, pre.rouge .ow {
+  color: #0550ae;
+}
+pre.rouge .gh {
+  color: #0550ae;
+  font-weight: bold;
+}
+pre.rouge .gu {
+  color: #0550ae;
+  font-weight: bold;
+}
+pre.rouge .s, pre.rouge .sa, pre.rouge .sc, pre.rouge .dl, pre.rouge .sd, pre.rouge .s2, pre.rouge .se, pre.rouge .sh, pre.rouge .sx, pre.rouge .s1, pre.rouge .ss {
+  color: #0a3069;
+}
+pre.rouge .nd {
+  color: #8250df;
+}
+pre.rouge .nf, pre.rouge .fm {
+  color: #8250df;
+}
+pre.rouge .err {
+  color: #f6f8fa;
+  background-color: #82071e;
+}
+pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cm, pre.rouge .cp, pre.rouge .cpf, pre.rouge .c1, pre.rouge .cs {
+  color: #6e7781;
+}
+pre.rouge .gl {
+  color: #6e7781;
+}
+pre.rouge .gt {
+  color: #6e7781;
+}
+pre.rouge .ni {
+  color: #24292f;
+}
+pre.rouge .si {
+  color: #24292f;
+}
+pre.rouge .ge {
+  color: #24292f;
+  font-style: italic;
+}
+pre.rouge .gs {
+  color: #24292f;
+  font-weight: bold;
+}
+</style>
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
@@ -449,7 +563,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#_prerequisites_what_students_have_to_prepare">1. Prerequisites - What students have to prepare</a></li>
-<li><a href="#_creating_the_project">2. Creating the project</a></li>
+<li><a href="#_reactive_in_android">2. Reactive in Android</a></li>
+<li><a href="#_creating_the_project">3. Creating the project</a>
+<ul class="sectlevel2">
+<li><a href="#_add_rxjava_library">3.1. Add RxJava Library</a></li>
+<li><a href="#_add_daggerhilt">3.2. Add Dagger/Hilt</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -477,7 +597,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
-<h2 id="_creating_the_project"><a class="anchor" href="#_creating_the_project"></a>2. Creating the project</h2>
+<h2 id="_reactive_in_android"><a class="anchor" href="#_reactive_in_android"></a>2. Reactive in Android</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/ReactiveX/RxAndroid" target="_blank" rel="noopener">RxAndroid: Reactive Extensions for Android</a></p>
+</li>
+<li>
+<p><a href="https://github.com/ReactiveX/RxJava" target="_blank" rel="noopener">RxJava</a>, <a href="https://github.com/ReactiveX/RxJava/wiki" target="_blank" rel="noopener">Wiki</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_creating_the_project"><a class="anchor" href="#_creating_the_project"></a>3. Creating the project</h2>
 <div class="sectionbody">
 <div class="imageblock">
 <div class="content">
@@ -489,13 +624,180 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <img src="images/create-project-002.png" alt="create project 002">
 </div>
 </div>
+<div class="sect2">
+<h3 id="_add_rxjava_library"><a class="anchor" href="#_add_rxjava_library"></a>3.1. Add RxJava Library</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_add_daggerhilt"><a class="anchor" href="#_add_daggerhilt"></a>3.2. Add Dagger/Hilt</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://stackoverflow.com/a/78328837/9818338" target="_blank" rel="noopener">Hilt dependency in toml file with KSP</a></p>
+</li>
+<li>
+<p>additional info here: <a href="https://medium.com/@duaaawan/hilt-for-android-a-beginners-guide-to-dependency-injection-7f9cadc5526b" target="_blank" rel="noopener">Hilt For Android: A Beginner’s Guide to Dependency Injection</a></p>
+</li>
+</ul>
+</div>
+<details>
+<summary class="title">build.gradle.kts(:app)</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="nf">plugins</span> <span class="p">{</span>
+    <span class="nf">alias</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">plugins</span><span class="p">.</span><span class="n">android</span><span class="p">.</span><span class="n">application</span><span class="p">)</span>
+    <span class="nf">alias</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">plugins</span><span class="p">.</span><span class="n">jetbrains</span><span class="p">.</span><span class="n">kotlin</span><span class="p">.</span><span class="n">android</span><span class="p">)</span>
+    <span class="nf">alias</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">plugins</span><span class="p">.</span><span class="n">kotlinAndroidKsp</span><span class="p">)</span>
+    <span class="nf">alias</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">plugins</span><span class="p">.</span><span class="n">hiltAndroid</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="nf">android</span> <span class="p">{</span>
+    <span class="n">namespace</span> <span class="p">=</span> <span class="s">"at.htl.todo"</span>
+    <span class="n">compileSdk</span> <span class="p">=</span> <span class="mi">34</span>
+
+    <span class="nf">defaultConfig</span> <span class="p">{</span>
+        <span class="n">applicationId</span> <span class="p">=</span> <span class="s">"at.htl.todo"</span>
+        <span class="n">minSdk</span> <span class="p">=</span> <span class="mi">30</span>
+        <span class="n">targetSdk</span> <span class="p">=</span> <span class="mi">34</span>
+        <span class="n">versionCode</span> <span class="p">=</span> <span class="mi">1</span>
+        <span class="n">versionName</span> <span class="p">=</span> <span class="s">"1.0"</span>
+
+        <span class="n">testInstrumentationRunner</span> <span class="p">=</span> <span class="s">"androidx.test.runner.AndroidJUnitRunner"</span>
+        <span class="nf">vectorDrawables</span> <span class="p">{</span>
+            <span class="n">useSupportLibrary</span> <span class="p">=</span> <span class="k">true</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="nf">buildTypes</span> <span class="p">{</span>
+        <span class="nf">release</span> <span class="p">{</span>
+            <span class="n">isMinifyEnabled</span> <span class="p">=</span> <span class="k">false</span>
+            <span class="nf">proguardFiles</span><span class="p">(</span>
+                <span class="nf">getDefaultProguardFile</span><span class="p">(</span><span class="s">"proguard-android-optimize.txt"</span><span class="p">),</span>
+                <span class="s">"proguard-rules.pro"</span>
+            <span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="nf">compileOptions</span> <span class="p">{</span>
+        <span class="n">sourceCompatibility</span> <span class="p">=</span> <span class="nc">JavaVersion</span><span class="p">.</span><span class="nc">VERSION_19</span>
+        <span class="n">targetCompatibility</span> <span class="p">=</span> <span class="nc">JavaVersion</span><span class="p">.</span><span class="nc">VERSION_19</span>
+    <span class="p">}</span>
+    <span class="nf">kotlinOptions</span> <span class="p">{</span>
+        <span class="n">jvmTarget</span> <span class="p">=</span> <span class="s">"19"</span>
+    <span class="p">}</span>
+    <span class="nf">buildFeatures</span> <span class="p">{</span>
+        <span class="n">compose</span> <span class="p">=</span> <span class="k">true</span>
+    <span class="p">}</span>
+    <span class="nf">composeOptions</span> <span class="p">{</span>
+        <span class="n">kotlinCompilerExtensionVersion</span> <span class="p">=</span> <span class="s">"1.5.13"</span>
+    <span class="p">}</span>
+    <span class="nf">packaging</span> <span class="p">{</span>
+        <span class="nf">resources</span> <span class="p">{</span>
+            <span class="n">excludes</span> <span class="p">+=</span> <span class="s">"/META-INF/{AL2.0,LGPL2.1}"</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nf">dependencies</span> <span class="p">{</span>
+
+    <span class="nf">implementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">androidx</span><span class="p">.</span><span class="n">core</span><span class="p">.</span><span class="n">ktx</span><span class="p">)</span>
+    <span class="nf">implementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">androidx</span><span class="p">.</span><span class="n">lifecycle</span><span class="p">.</span><span class="n">runtime</span><span class="p">.</span><span class="n">ktx</span><span class="p">)</span>
+    <span class="nf">implementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">androidx</span><span class="p">.</span><span class="n">activity</span><span class="p">.</span><span class="n">compose</span><span class="p">)</span>
+    <span class="nf">implementation</span><span class="p">(</span><span class="nf">platform</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">androidx</span><span class="p">.</span><span class="n">compose</span><span class="p">.</span><span class="n">bom</span><span class="p">))</span>
+    <span class="nf">implementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">androidx</span><span class="p">.</span><span class="n">ui</span><span class="p">)</span>
+    <span class="nf">implementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">androidx</span><span class="p">.</span><span class="n">ui</span><span class="p">.</span><span class="n">graphics</span><span class="p">)</span>
+    <span class="nf">implementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">androidx</span><span class="p">.</span><span class="n">ui</span><span class="p">.</span><span class="n">tooling</span><span class="p">.</span><span class="n">preview</span><span class="p">)</span>
+    <span class="nf">implementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">androidx</span><span class="p">.</span><span class="n">material3</span><span class="p">)</span>
+    <span class="nf">testImplementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">junit</span><span class="p">)</span>
+    <span class="nf">androidTestImplementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">androidx</span><span class="p">.</span><span class="n">junit</span><span class="p">)</span>
+    <span class="nf">androidTestImplementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">androidx</span><span class="p">.</span><span class="n">espresso</span><span class="p">.</span><span class="n">core</span><span class="p">)</span>
+    <span class="nf">androidTestImplementation</span><span class="p">(</span><span class="nf">platform</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">androidx</span><span class="p">.</span><span class="n">compose</span><span class="p">.</span><span class="n">bom</span><span class="p">))</span>
+    <span class="nf">androidTestImplementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">androidx</span><span class="p">.</span><span class="n">ui</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">junit4</span><span class="p">)</span>
+    <span class="nf">debugImplementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">androidx</span><span class="p">.</span><span class="n">ui</span><span class="p">.</span><span class="n">tooling</span><span class="p">)</span>
+    <span class="nf">debugImplementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">androidx</span><span class="p">.</span><span class="n">ui</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">manifest</span><span class="p">)</span>
+
+    <span class="c1">// RxJava</span>
+    <span class="nf">implementation</span> <span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">rxjava</span><span class="p">)</span>
+
+    <span class="c1">// Hilt</span>
+    <span class="nf">implementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">hilt</span><span class="p">.</span><span class="n">android</span><span class="p">)</span>
+    <span class="nf">ksp</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">hilt</span><span class="p">.</span><span class="n">compiler</span><span class="p">)</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">build.gradle.kts(todo)</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="c1">// Top-level build file where you can add configuration options common to all sub-projects/modules.</span>
+<span class="nf">plugins</span> <span class="p">{</span>
+    <span class="nf">alias</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">plugins</span><span class="p">.</span><span class="n">android</span><span class="p">.</span><span class="n">application</span><span class="p">)</span> <span class="n">apply</span> <span class="k">false</span>
+    <span class="nf">alias</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">plugins</span><span class="p">.</span><span class="n">jetbrains</span><span class="p">.</span><span class="n">kotlin</span><span class="p">.</span><span class="n">android</span><span class="p">)</span> <span class="n">apply</span> <span class="k">false</span>
+    <span class="nf">alias</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">plugins</span><span class="p">.</span><span class="n">hiltAndroid</span><span class="p">)</span> <span class="n">apply</span> <span class="k">false</span>
+    <span class="nf">alias</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">plugins</span><span class="p">.</span><span class="n">kotlinAndroidKsp</span><span class="p">)</span> <span class="n">apply</span> <span class="k">false</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">libs.versions.toml</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="toml"><span class="nn">[versions]</span>
+<span class="py">agp</span> <span class="p">=</span> <span class="s">"8.4.0"</span>
+<span class="py">hiltVersion</span> <span class="p">=</span> <span class="s">"2.51.1"</span>
+<span class="py">kotlin</span> <span class="p">=</span> <span class="s">"1.9.23"</span>
+<span class="py">coreKtx</span> <span class="p">=</span> <span class="s">"1.13.1"</span>
+<span class="py">junit</span> <span class="p">=</span> <span class="s">"4.13.2"</span>
+<span class="py">junitVersion</span> <span class="p">=</span> <span class="s">"1.1.5"</span>
+<span class="py">espressoCore</span> <span class="p">=</span> <span class="s">"3.5.1"</span>
+<span class="py">lifecycleRuntimeKtx</span> <span class="p">=</span> <span class="s">"2.7.0"</span>
+<span class="py">activityCompose</span> <span class="p">=</span> <span class="s">"1.9.0"</span>
+<span class="py">composeBom</span> <span class="p">=</span> <span class="s">"2024.05.00"</span>
+<span class="py">rxjavaVersion</span> <span class="p">=</span> <span class="s">"3.1.8"</span>
+<span class="py">ksp</span> <span class="p">=</span> <span class="s">"1.9.23-1.0.20"</span>
+
+<span class="nn">[libraries]</span>
+<span class="nn">androidx-core-ktx</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"androidx.core"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"core-ktx"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"coreKtx"</span> <span class="p">}</span>
+<span class="nn">hilt-android</span> <span class="o">=</span> <span class="p">{</span> <span class="py">module</span> <span class="p">=</span> <span class="s">"com.google.dagger:hilt-android"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"hiltVersion"</span> <span class="p">}</span>
+<span class="nn">hilt-compiler</span> <span class="o">=</span> <span class="p">{</span> <span class="py">module</span> <span class="p">=</span> <span class="s">"com.google.dagger:hilt-compiler"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"hiltVersion"</span> <span class="p">}</span>
+<span class="nn">junit</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"junit"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"junit"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"junit"</span> <span class="p">}</span>
+<span class="nn">androidx-junit</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"androidx.test.ext"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"junit"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"junitVersion"</span> <span class="p">}</span>
+<span class="nn">androidx-espresso-core</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"androidx.test.espresso"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"espresso-core"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"espressoCore"</span> <span class="p">}</span>
+<span class="nn">androidx-lifecycle-runtime-ktx</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"androidx.lifecycle"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"lifecycle-runtime-ktx"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"lifecycleRuntimeKtx"</span> <span class="p">}</span>
+<span class="nn">androidx-activity-compose</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"androidx.activity"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"activity-compose"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"activityCompose"</span> <span class="p">}</span>
+<span class="nn">androidx-compose-bom</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"androidx.compose"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"compose-bom"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"composeBom"</span> <span class="p">}</span>
+<span class="nn">androidx-ui</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"androidx.compose.ui"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"ui"</span> <span class="p">}</span>
+<span class="nn">androidx-ui-graphics</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"androidx.compose.ui"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"ui-graphics"</span> <span class="p">}</span>
+<span class="nn">androidx-ui-tooling</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"androidx.compose.ui"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"ui-tooling"</span> <span class="p">}</span>
+<span class="nn">androidx-ui-tooling-preview</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"androidx.compose.ui"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"ui-tooling-preview"</span> <span class="p">}</span>
+<span class="nn">androidx-ui-test-manifest</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"androidx.compose.ui"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"ui-test-manifest"</span> <span class="p">}</span>
+<span class="nn">androidx-ui-test-junit4</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"androidx.compose.ui"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"ui-test-junit4"</span> <span class="p">}</span>
+<span class="nn">androidx-material3</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"androidx.compose.material3"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"material3"</span> <span class="p">}</span>
+<span class="nn">rxjava</span> <span class="o">=</span> <span class="p">{</span> <span class="py">module</span> <span class="p">=</span> <span class="s">"io.reactivex.rxjava3:rxjava"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"rxjavaVersion"</span> <span class="p">}</span>
+
+<span class="nn">[plugins]</span>
+<span class="nn">android-application</span> <span class="o">=</span> <span class="p">{</span> <span class="py">id</span> <span class="p">=</span> <span class="s">"com.android.application"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"agp"</span> <span class="p">}</span>
+<span class="nn">jetbrains-kotlin-android</span> <span class="o">=</span> <span class="p">{</span> <span class="py">id</span> <span class="p">=</span> <span class="s">"org.jetbrains.kotlin.android"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"kotlin"</span> <span class="p">}</span>
+<span class="nn">kotlinAndroidKsp</span> <span class="o">=</span> <span class="p">{</span> <span class="py">id</span> <span class="p">=</span> <span class="s">"com.google.devtools.ksp"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"ksp"</span> <span class="p">}</span>
+<span class="nn">hiltAndroid</span> <span class="o">=</span> <span class="p">{</span> <span class="py">id</span> <span class="p">=</span> <span class="s">"com.google.dagger.hilt.android"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"hiltVersion"</span> <span class="p">}</span></code></pre>
+</div>
+</div>
+</div>
+</details>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1<br>
-Last updated 2024-05-08 13:45:19 UTC
+Last updated 2024-05-08 15:03:57 UTC
 </div>
 </div>
 </body>
