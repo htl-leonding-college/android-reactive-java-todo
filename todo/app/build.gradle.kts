@@ -47,6 +47,10 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/INDEX.LIST"
+            excludes += "/META-INF/DEPENDENCIES"
+            excludes += "/META-INF/LICENSE.md"
+            excludes += "/META-INF/NOTICE.md"
         }
     }
 }
@@ -75,4 +79,13 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+
+    // Jackson
+    implementation(libs.jackson.databind)
+
+    // Resteasy
+    implementation(libs.resteasy.client)
+    //implementation("org.eclipse.microprofile.config:microprofile-config-api:3.1") // for application.properties config loader
+    implementation(libs.smallrye.config)
+
 }
