@@ -1,4 +1,38 @@
-= Index page
+= Android Lab: Reactive App with Java
+Thomas W. Stütz
+0.0.1, 2024-05-08 : Android - ToDo App
 ifndef::imagesdir[:imagesdir: images]
+//:toc-placement!:  // prevents the generation of the doc at this position, so it can be printed afterwards
+:sourcedir: ../src/main/java
+:icons: font
+:sectnums:    // Nummerierung der Überschriften / section numbering
+:toc: left
+:toclevels: 5
+:experimental:
 
-image::img.png[]
+// https://mrhaki.blogspot.com/2014/06/awesome-asciidoc-use-link-attributes.html
+:linkattrs:
+
+//Need this blank line after ifdef, don't know why...
+ifdef::backend-html5[]
+
+// https://fontawesome.com/v4.7.0/icons/
+icon:file-text-o[link=https://raw.githubusercontent.com/htl-leonding-college/android-reactive-java-todo/main/asciidocs/docs/{docname}.adoc] ‏ ‏ ‎
+icon:github-square[link=https://github.com/htl-leonding-college/android-reactive-java-todo^] ‏ ‏ ‎
+icon:home[link=https://htl-leonding.github.io/]
+endif::backend-html5[]
+
+// print the toc here (not at the default position)
+toc::[]
+
+== Prerequisites - What students have to prepare
+
+* OS for developing
+
+
+== Creating the project
+
+image::create-project-001.png[]
+
+image::create-project-002.png[]
+
