@@ -41,13 +41,13 @@ image::create-project-001.png[]
 
 image::create-project-002.png[]
 
-=== Add RxJava Library
-
-=== Add Dagger/Hilt
+=== Add RxJava Library, Dagger/Hilt, resteasy-client, jackson-databind, smallrye-config
 
 * https://stackoverflow.com/a/78328837/9818338[Hilt dependency in toml file with KSP^]
 
 * additional info here: https://medium.com/@duaaawan/hilt-for-android-a-beginners-guide-to-dependency-injection-7f9cadc5526b[Hilt For Android: A Beginner’s Guide to Dependency Injection^]
+
+IMPORTANT: As kapt is in maintenance mode, we use KSP
 
 .build.gradle.kts(:app)
 [%collapsible]
@@ -88,11 +88,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_19
-        targetCompatibility = JavaVersion.VERSION_19
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = "19"
+        jvmTarget = "21"
     }
     buildFeatures {
         compose = true
@@ -103,6 +103,10 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/INDEX.LIST"
+            excludes += "/META-INF/DEPENDENCIES"
+            excludes += "/META-INF/LICENSE.md"
+            excludes += "/META-INF/NOTICE.md"
         }
     }
 }
@@ -131,6 +135,15 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+
+    // Jackson
+    implementation(libs.jackson.databind)
+
+    // Resteasy
+    implementation(libs.resteasy.client)
+    //implementation("org.eclipse.microprofile.config:microprofile-config-api:3.1") // for application.properties config loader
+    implementation(libs.smallrye.config)
+
 }
 ----
 ====
@@ -158,6 +171,7 @@ plugins {
 [versions]
 agp = "8.4.0"
 hiltVersion = "2.51.1"
+jacksonDatabind = "2.17.1"
 kotlin = "1.9.23"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -166,13 +180,16 @@ espressoCore = "3.5.1"
 lifecycleRuntimeKtx = "2.7.0"
 activityCompose = "1.9.0"
 composeBom = "2024.05.00"
+resteasyClient = "6.2.8.Final"
 rxjavaVersion = "3.1.8"
 ksp = "1.9.23-1.0.20"
+smallryeConfig = "3.8.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltVersion" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltVersion" }
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jacksonDatabind" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -186,15 +203,185 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+resteasy-client = { module = "org.jboss.resteasy:resteasy-client", version.ref = "resteasyClient" }
 rxjava = { module = "io.reactivex.rxjava3:rxjava", version.ref = "rxjavaVersion" }
+smallrye-config = { module = "io.smallrye.config:smallrye-config", version.ref = "smallryeConfig" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinAndroidKsp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }
+
 ----
 ====
+
+== Change to Project-View
+
+image::intellij-project-view.png[]
+
+
+== Separate Java-Business-Classes and Kotlin-Compose-Classes
+
+* For separating Java and Kotlin classes we use Hilt as CDI-framework.
+
+
+=== Configure Hilt - Add Hilt Application Class
+
+image::hilt-error-name-in-manifest.png[]
+
+* We create a new class `TodoApplication.java` as application entry point.
+* This class is now our https://developer.android.com/training/dependency-injection/hilt-android#application-class[application-level dependency container^].
+
+.at.htl.todo.TodoApplication
+[source,java]
+----
+package at.htl.todo;
+
+import android.app.Application;
+import javax.inject.Singleton;
+import dagger.hilt.android.HiltAndroidApp;
+
+@HiltAndroidApp
+@Singleton
+public class TodoApplication extends Application {
+}
+----
+
+image::hilt-application-container.png[]
+
+
+.Add Application-Class to manifest.xml
+[source,xml,highlight=6]
+----
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:name=".TodoApplication"   <.>
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Todo"
+        tools:targetApi="31">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Todo">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
+----
+
+<.> Add here the name of the Hilt Application Class
+
+
+=== @AndroidEntryPoint
+
+* Once Hilt is set up in your Application class and an application-level component is available, Hilt can provide dependencies to other Android classes that have the @AndroidEntryPoint annotation.
+
+* https://developer.android.com/training/dependency-injection/hilt-android#android-classes[Inject dependencies into Android classes^]
+
+.at.htl.todo.MainActivity
+[source,java]
+----
+package at.htl.todo;
+
+import android.os.Bundle;
+import androidx.activity.ComponentActivity;
+import javax.inject.Inject;
+import at.htl.todo.ui.layout.MainView;
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
+public class MainActivity extends ComponentActivity {
+
+    @Inject
+    MainView mainView;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mainView.buildContent(this);
+    }
+}
+----
+
+at.htl.todo.ui.layout.MainView
+[source,kotlin]
+----
+package at.htl.todo.ui.layout
+
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.tooling.preview.Preview
+import at.htl.todo.ui.theme.TodoTheme
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class MainView {
+
+    @Inject
+    constructor(){}
+
+    fun buildContent(activity: ComponentActivity) {
+        activity.enableEdgeToEdge()
+        activity.setContent {
+            TodoTheme {
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    Greeting(
+                        name = "Android",
+                        modifier = Modifier.padding(innerPadding)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun Greeting(name: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Hello $name!",
+        modifier = modifier
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    TodoTheme {
+        Greeting("Android")
+    }
+}
+----
+
+
+
+
+
+
 
 
 
