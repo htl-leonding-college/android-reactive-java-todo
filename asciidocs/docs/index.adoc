@@ -332,7 +332,7 @@ image::hilt-log-app-started.png[]
 * https://developer.android.com/training/dependency-injection/hilt-android#define-bindings[Define Hilt bindings^]
 
 
-at.htl.todo.ui.layout.MainView
+.at.htl.todo.ui.layout.MainView
 [source,kotlin]
 ----
 package at.htl.todo.ui.layout
@@ -551,10 +551,263 @@ public class MainActivity extends ComponentActivity {
 
 image::config-assets-logcat-entry.png[]
 
+== Add the Model and Store
+
+* https://redux.js.org/understanding/thinking-in-redux/three-principles[Three Principles^]
+
+* https://reactivex.io/intro.html[ReactiveX^]
+
+* https://jsonplaceholder.typicode.com/todos[Todos-Endpoint^]
+
+image::store-project-tree.png[]
+
+.at.htl.todo.model.Todo
+[source,java]
+----
+package at.htl.todo.model;
+
+public class Todo {
+    public Long userId;
+    public Long id;
+    public String title;
+    public boolean completed;
+
+    public Todo() {
+    }
+
+    public Todo(Long userId, Long id, String title, boolean completed) {
+        this.userId = userId;
+        this.id = id;
+        this.title = title;
+        this.completed = completed;
+    }
+}
+----
+
+.at.htl.todo.model.Model
+[source,java]
+----
+package at.htl.todo.model;
+
+import java.util.List;
+
+public class Model {
+
+    public Todo[] todos = {
+            new Todo(1L, 1L, "Buy milk", true), // <.>
+            new Todo(2L, 2L, "Buy eggs", false),
+            new Todo(2L, 3L, "Buy bread", false)
+    };
+
+}
+----
+
+<.> For now, we use static data until implementing the rest client
+
+.at.htl.todo.model.ModelStore
+[source,java]
+----
+package at.htl.todo.model;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import at.htl.todo.util.store.Store;
+
+@Singleton
+public class ModelStore extends Store<Model>  {
+
+    @Inject
+    ModelStore() {
+        super(Model.class, new Model());
+    }
+
+    public void setTodos(Todo[] todos) {
+        apply(model -> model.todos = todos);
+    }
+}
+----
+
+.at.htl.todo.util.store.Store
+[source,java]
+----
+package at.htl.todo.util.store;
+
+import java.util.concurrent.CompletionException;
+import java.util.function.Consumer;
+import at.htl.todo.util.immer.Immer;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
+
+public class Store<T> {
+    public final BehaviorSubject<T> pipe;
+    public final Immer<T> immer;
+
+    protected Store(Class<? extends T> type, T initialState) {
+        try {
+            pipe = BehaviorSubject.createDefault(initialState);
+            immer = new Immer<T>(type);
+        } catch (Exception e) {
+            throw new CompletionException(e);
+        }
+    }
+    public void apply(Consumer<T> recipe) {
+        pipe.onNext(immer.produce(pipe.getValue(), recipe));
+    }
+}
+----
 
 
 
 
+
+.MainView (partly)
+[source,kotlin]
+----
+@Singleton
+class MainView @Inject constructor() {
+
+    @Inject
+    lateinit var store: ModelStore
+
+    fun buildContent(activity: ComponentActivity) {
+        activity.enableEdgeToEdge()
+        activity.setContent {
+            val viewModel = store
+                .pipe
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeAsState(initial = Model())
+                .value
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background
+            ) {
+                Todos(model = viewModel, modifier = Modifier.padding(all = 32.dp))
+            }
+        }
+    }
+}
+----
+
+.at.htl.todo.ui.layout.MainView
+[%collapsible]
+====
+
+[source,kotlin]
+----
+package at.htl.todo.ui.layout
+
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rxjava3.subscribeAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import at.htl.todo.model.Model
+import at.htl.todo.model.ModelStore
+import at.htl.todo.model.Todo
+import at.htl.todo.ui.theme.TodoTheme
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class MainView @Inject constructor() {
+
+    @Inject
+    lateinit var store: ModelStore
+
+    fun buildContent(activity: ComponentActivity) {
+        activity.enableEdgeToEdge()
+        activity.setContent {
+            val viewModel = store
+                .pipe
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeAsState(initial = Model())
+                .value
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background
+            ) {
+                Todos(model = viewModel, modifier = Modifier.padding(all = 32.dp))
+            }
+        }
+    }
+}
+
+@Composable
+fun Todos(model: Model, modifier: Modifier = Modifier) {
+    val todos = model.todos
+    LazyColumn(
+        modifier = modifier.padding(16.dp)
+    ) {
+        items(todos.size) { index ->
+            TodoRow(todo  = todos[index])
+            HorizontalDivider()
+        }
+    }
+}
+
+@Composable
+fun TodoRow(todo: Todo) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = todo.title,
+            style = MaterialTheme.typography.bodySmall
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = todo.id.toString(),
+            style = MaterialTheme.typography.bodySmall
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        Checkbox(
+            checked = todo.completed,
+            onCheckedChange = { /* Update the completed status of the todo item */ }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TodoPreview() {
+    val model = Model()
+    val todo = Todo()
+    todo.id = 1
+    todo.title = "First Todo"
+    model.todos = arrayOf(todo)
+
+    TodoTheme {
+        Todos(model)
+    }
+}
+----
+====
+
+
+
+
+
+
+image::store-app-started.png[]
 
 
 

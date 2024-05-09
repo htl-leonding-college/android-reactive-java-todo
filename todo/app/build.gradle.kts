@@ -75,6 +75,8 @@ dependencies {
 
     // RxJava
     implementation (libs.rxjava)
+    implementation(libs.rxandroid)
+    implementation(libs.androidx.runtime.rxjava3)
 
     // Hilt
     implementation(libs.hilt.android)
@@ -85,6 +87,8 @@ dependencies {
 
     // Resteasy
     implementation(libs.resteasy.client)
+
+    // SmallRye Config
     //implementation("org.eclipse.microprofile.config:microprofile-config-api:3.1") // for application.properties config loader
     implementation(libs.smallrye.config)
 
