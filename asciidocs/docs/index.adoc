@@ -88,11 +88,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "21"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -131,6 +131,8 @@ dependencies {
 
     // RxJava
     implementation (libs.rxjava)
+    implementation(libs.rxandroid)
+    implementation(libs.androidx.runtime.rxjava3)
 
     // Hilt
     implementation(libs.hilt.android)
@@ -141,6 +143,8 @@ dependencies {
 
     // Resteasy
     implementation(libs.resteasy.client)
+
+    // SmallRye Config
     //implementation("org.eclipse.microprofile.config:microprofile-config-api:3.1") // for application.properties config loader
     implementation(libs.smallrye.config)
 
@@ -182,6 +186,8 @@ activityCompose = "1.9.0"
 composeBom = "2024.05.00"
 resteasyClient = "6.2.8.Final"
 rxjavaVersion = "3.1.8"
+rxandroid = "3.0.2"
+runtimeRxjava3 = "1.6.7"
 ksp = "1.9.23-1.0.20"
 smallryeConfig = "3.8.1"
 
@@ -205,6 +211,8 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 resteasy-client = { module = "org.jboss.resteasy:resteasy-client", version.ref = "resteasyClient" }
 rxjava = { module = "io.reactivex.rxjava3:rxjava", version.ref = "rxjavaVersion" }
+rxandroid = { module = "io.reactivex.rxjava3:rxandroid", version.ref = "rxandroid" }
+androidx-runtime-rxjava3 = { module = "androidx.compose.runtime:runtime-rxjava3", version.ref = "runtimeRxjava3" }
 smallrye-config = { module = "io.smallrye.config:smallrye-config", version.ref = "smallryeConfig" }
 
 [plugins]
@@ -212,7 +220,6 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinAndroidKsp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }
-
 ----
 ====
 
