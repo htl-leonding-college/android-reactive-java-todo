@@ -497,7 +497,7 @@ image::config-assets-folder-project-tree.png[]
 json.placeholder.baseurl=https://jsonplaceholder.typicode.com
 ----
 
-* The create a java class
+* Then create a java class
 +
 .at.htl.todo.util.Config
 [source,java]
@@ -529,7 +529,7 @@ public class Config {
 }
 ----
 
-* Finally use your configration ie in the MainActivity.java
+* Finally, use your configuration i.e. in the MainActivity.java
 +
 [source,java]
 ----
@@ -810,11 +810,118 @@ fun TodoPreview() {
 image::store-app-started.png[]
 
 
+== Add REST-Client
+
+image::rest-client-project-tree.png[]
+
+.at.htl.todo.model.Model
+[source,java]
+----
+package at.htl.todo.model;
+
+import java.util.List;
+
+public class Model {
+
+    public Todo[] todos = new Todo[0];
+
+}
+----
+
+
+.at.htl.todo.model.TodoClient
+[source,java]
+----
+package at.htl.todo.model;
+
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.MediaType;
+
+@Path("/todos")
+@Consumes(MediaType.APPLICATION_JSON)
+public interface TodoClient {
+    @GET
+    Todo[] all();
+}
+----
+
+
+.at.htl.todo.model.TodoService
+[source,java]
+----
+package at.htl.todo.model;
+
+
+import android.util.Log;
+
+import java.util.concurrent.CompletableFuture;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import at.htl.todo.util.resteasy.RestApiClientBuilder;
+
+@Singleton
+public class TodoService {
+    static final String TAG = TodoService.class.getSimpleName();
+    public static String JSON_PLACEHOLDER_BASE_URL = "https://jsonplaceholder.typicode.com";
+    public final TodoClient todoClient;
+    public final ModelStore store;
+
+    @Inject
+    TodoService(RestApiClientBuilder builder, ModelStore store) {
+        Log.i(TAG, "Creating TodoService with base url: " + JSON_PLACEHOLDER_BASE_URL);
+        todoClient = builder.build(TodoClient.class, JSON_PLACEHOLDER_BASE_URL);
+        this.store = store;
+    }
+    public void getAll() {
+        CompletableFuture
+                .supplyAsync(() -> todoClient.all())
+                .thenAccept(store::setTodos);
+    }
+}
+
+
+----
+
+
+.at.htl.todo.model.
+[source,java]
+----
+
+----
+
+
+.at.htl.todo.model.
+[source,java]
+----
+
+----
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+image::rest-client-app-started.png[]
 
 
 
