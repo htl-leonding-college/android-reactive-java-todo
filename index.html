@@ -566,8 +566,14 @@ pre.rouge .gs {
 <li><a href="#_reactive_in_android">2. Reactive in Android</a></li>
 <li><a href="#_creating_the_project">3. Creating the project</a>
 <ul class="sectlevel2">
-<li><a href="#_add_rxjava_library">3.1. Add RxJava Library</a></li>
-<li><a href="#_add_daggerhilt">3.2. Add Dagger/Hilt</a></li>
+<li><a href="#_add_rxjava_library_daggerhilt_resteasy_client_jackson_databind_smallrye_config">3.1. Add RxJava Library, Dagger/Hilt, resteasy-client, jackson-databind, smallrye-config</a></li>
+</ul>
+</li>
+<li><a href="#_change_to_project_view">4. Change to Project-View</a></li>
+<li><a href="#_separate_java_business_classes_and_kotlin_compose_classes">5. Separate Java-Business-Classes and Kotlin-Compose-Classes</a>
+<ul class="sectlevel2">
+<li><a href="#_configure_hilt_add_hilt_application_class">5.1. Configure Hilt - Add Hilt Application Class</a></li>
+<li><a href="#_androidentrypoint">5.2. @AndroidEntryPoint</a></li>
 </ul>
 </li>
 </ul>
@@ -625,11 +631,7 @@ pre.rouge .gs {
 </div>
 </div>
 <div class="sect2">
-<h3 id="_add_rxjava_library"><a class="anchor" href="#_add_rxjava_library"></a>3.1. Add RxJava Library</h3>
-
-</div>
-<div class="sect2">
-<h3 id="_add_daggerhilt"><a class="anchor" href="#_add_daggerhilt"></a>3.2. Add Dagger/Hilt</h3>
+<h3 id="_add_rxjava_library_daggerhilt_resteasy_client_jackson_databind_smallrye_config"><a class="anchor" href="#_add_rxjava_library_daggerhilt_resteasy_client_jackson_databind_smallrye_config"></a>3.1. Add RxJava Library, Dagger/Hilt, resteasy-client, jackson-databind, smallrye-config</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -639,6 +641,18 @@ pre.rouge .gs {
 <p>additional info here: <a href="https://medium.com/@duaaawan/hilt-for-android-a-beginners-guide-to-dependency-injection-7f9cadc5526b" target="_blank" rel="noopener">Hilt For Android: A Beginner’s Guide to Dependency Injection</a></p>
 </li>
 </ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+As kapt is in maintenance mode, we use KSP
+</td>
+</tr>
+</table>
 </div>
 <details>
 <summary class="title">build.gradle.kts(:app)</summary>
@@ -679,11 +693,11 @@ pre.rouge .gs {
         <span class="p">}</span>
     <span class="p">}</span>
     <span class="nf">compileOptions</span> <span class="p">{</span>
-        <span class="n">sourceCompatibility</span> <span class="p">=</span> <span class="nc">JavaVersion</span><span class="p">.</span><span class="nc">VERSION_19</span>
-        <span class="n">targetCompatibility</span> <span class="p">=</span> <span class="nc">JavaVersion</span><span class="p">.</span><span class="nc">VERSION_19</span>
+        <span class="n">sourceCompatibility</span> <span class="p">=</span> <span class="nc">JavaVersion</span><span class="p">.</span><span class="nc">VERSION_21</span>
+        <span class="n">targetCompatibility</span> <span class="p">=</span> <span class="nc">JavaVersion</span><span class="p">.</span><span class="nc">VERSION_21</span>
     <span class="p">}</span>
     <span class="nf">kotlinOptions</span> <span class="p">{</span>
-        <span class="n">jvmTarget</span> <span class="p">=</span> <span class="s">"19"</span>
+        <span class="n">jvmTarget</span> <span class="p">=</span> <span class="s">"21"</span>
     <span class="p">}</span>
     <span class="nf">buildFeatures</span> <span class="p">{</span>
         <span class="n">compose</span> <span class="p">=</span> <span class="k">true</span>
@@ -694,6 +708,10 @@ pre.rouge .gs {
     <span class="nf">packaging</span> <span class="p">{</span>
         <span class="nf">resources</span> <span class="p">{</span>
             <span class="n">excludes</span> <span class="p">+=</span> <span class="s">"/META-INF/{AL2.0,LGPL2.1}"</span>
+            <span class="n">excludes</span> <span class="p">+=</span> <span class="s">"/META-INF/INDEX.LIST"</span>
+            <span class="n">excludes</span> <span class="p">+=</span> <span class="s">"/META-INF/DEPENDENCIES"</span>
+            <span class="n">excludes</span> <span class="p">+=</span> <span class="s">"/META-INF/LICENSE.md"</span>
+            <span class="n">excludes</span> <span class="p">+=</span> <span class="s">"/META-INF/NOTICE.md"</span>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -722,6 +740,15 @@ pre.rouge .gs {
     <span class="c1">// Hilt</span>
     <span class="nf">implementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">hilt</span><span class="p">.</span><span class="n">android</span><span class="p">)</span>
     <span class="nf">ksp</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">hilt</span><span class="p">.</span><span class="n">compiler</span><span class="p">)</span>
+
+    <span class="c1">// Jackson</span>
+    <span class="nf">implementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">jackson</span><span class="p">.</span><span class="n">databind</span><span class="p">)</span>
+
+    <span class="c1">// Resteasy</span>
+    <span class="nf">implementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">resteasy</span><span class="p">.</span><span class="n">client</span><span class="p">)</span>
+    <span class="c1">//implementation("org.eclipse.microprofile.config:microprofile-config-api:3.1") // for application.properties config loader</span>
+    <span class="nf">implementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">smallrye</span><span class="p">.</span><span class="n">config</span><span class="p">)</span>
+
 <span class="p">}</span></code></pre>
 </div>
 </div>
@@ -751,6 +778,7 @@ pre.rouge .gs {
 <pre class="rouge highlight"><code data-lang="toml"><span class="nn">[versions]</span>
 <span class="py">agp</span> <span class="p">=</span> <span class="s">"8.4.0"</span>
 <span class="py">hiltVersion</span> <span class="p">=</span> <span class="s">"2.51.1"</span>
+<span class="py">jacksonDatabind</span> <span class="p">=</span> <span class="s">"2.17.1"</span>
 <span class="py">kotlin</span> <span class="p">=</span> <span class="s">"1.9.23"</span>
 <span class="py">coreKtx</span> <span class="p">=</span> <span class="s">"1.13.1"</span>
 <span class="py">junit</span> <span class="p">=</span> <span class="s">"4.13.2"</span>
@@ -759,13 +787,16 @@ pre.rouge .gs {
 <span class="py">lifecycleRuntimeKtx</span> <span class="p">=</span> <span class="s">"2.7.0"</span>
 <span class="py">activityCompose</span> <span class="p">=</span> <span class="s">"1.9.0"</span>
 <span class="py">composeBom</span> <span class="p">=</span> <span class="s">"2024.05.00"</span>
+<span class="py">resteasyClient</span> <span class="p">=</span> <span class="s">"6.2.8.Final"</span>
 <span class="py">rxjavaVersion</span> <span class="p">=</span> <span class="s">"3.1.8"</span>
 <span class="py">ksp</span> <span class="p">=</span> <span class="s">"1.9.23-1.0.20"</span>
+<span class="py">smallryeConfig</span> <span class="p">=</span> <span class="s">"3.8.1"</span>
 
 <span class="nn">[libraries]</span>
 <span class="nn">androidx-core-ktx</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"androidx.core"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"core-ktx"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"coreKtx"</span> <span class="p">}</span>
 <span class="nn">hilt-android</span> <span class="o">=</span> <span class="p">{</span> <span class="py">module</span> <span class="p">=</span> <span class="s">"com.google.dagger:hilt-android"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"hiltVersion"</span> <span class="p">}</span>
 <span class="nn">hilt-compiler</span> <span class="o">=</span> <span class="p">{</span> <span class="py">module</span> <span class="p">=</span> <span class="s">"com.google.dagger:hilt-compiler"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"hiltVersion"</span> <span class="p">}</span>
+<span class="nn">jackson-databind</span> <span class="o">=</span> <span class="p">{</span> <span class="py">module</span> <span class="p">=</span> <span class="s">"com.fasterxml.jackson.core:jackson-databind"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"jacksonDatabind"</span> <span class="p">}</span>
 <span class="nn">junit</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"junit"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"junit"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"junit"</span> <span class="p">}</span>
 <span class="nn">androidx-junit</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"androidx.test.ext"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"junit"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"junitVersion"</span> <span class="p">}</span>
 <span class="nn">androidx-espresso-core</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"androidx.test.espresso"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"espresso-core"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"espressoCore"</span> <span class="p">}</span>
@@ -779,7 +810,9 @@ pre.rouge .gs {
 <span class="nn">androidx-ui-test-manifest</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"androidx.compose.ui"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"ui-test-manifest"</span> <span class="p">}</span>
 <span class="nn">androidx-ui-test-junit4</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"androidx.compose.ui"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"ui-test-junit4"</span> <span class="p">}</span>
 <span class="nn">androidx-material3</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"androidx.compose.material3"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"material3"</span> <span class="p">}</span>
+<span class="nn">resteasy-client</span> <span class="o">=</span> <span class="p">{</span> <span class="py">module</span> <span class="p">=</span> <span class="s">"org.jboss.resteasy:resteasy-client"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"resteasyClient"</span> <span class="p">}</span>
 <span class="nn">rxjava</span> <span class="o">=</span> <span class="p">{</span> <span class="py">module</span> <span class="p">=</span> <span class="s">"io.reactivex.rxjava3:rxjava"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"rxjavaVersion"</span> <span class="p">}</span>
+<span class="nn">smallrye-config</span> <span class="o">=</span> <span class="p">{</span> <span class="py">module</span> <span class="p">=</span> <span class="s">"io.smallrye.config:smallrye-config"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"smallryeConfig"</span> <span class="p">}</span>
 
 <span class="nn">[plugins]</span>
 <span class="nn">android-application</span> <span class="o">=</span> <span class="p">{</span> <span class="py">id</span> <span class="p">=</span> <span class="s">"com.android.application"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"agp"</span> <span class="p">}</span>
@@ -793,11 +826,211 @@ pre.rouge .gs {
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_change_to_project_view"><a class="anchor" href="#_change_to_project_view"></a>4. Change to Project-View</h2>
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="images/intellij-project-view.png" alt="intellij project view">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_separate_java_business_classes_and_kotlin_compose_classes"><a class="anchor" href="#_separate_java_business_classes_and_kotlin_compose_classes"></a>5. Separate Java-Business-Classes and Kotlin-Compose-Classes</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>For separating Java and Kotlin classes we use Hilt as CDI-framework.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_configure_hilt_add_hilt_application_class"><a class="anchor" href="#_configure_hilt_add_hilt_application_class"></a>5.1. Configure Hilt - Add Hilt Application Class</h3>
+<div class="imageblock">
+<div class="content">
+<img src="images/hilt-error-name-in-manifest.png" alt="hilt error name in manifest">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>We create a new class <code>TodoApplication.java</code> as application entry point.</p>
+</li>
+<li>
+<p>This class is now our <a href="https://developer.android.com/training/dependency-injection/hilt-android#application-class" target="_blank" rel="noopener">application-level dependency container</a>.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">at.htl.todo.TodoApplication</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">package</span> <span class="nn">at.htl.todo</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">android.app.Application</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.inject.Singleton</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">dagger.hilt.android.HiltAndroidApp</span><span class="o">;</span>
+
+<span class="nd">@HiltAndroidApp</span>
+<span class="nd">@Singleton</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TodoApplication</span> <span class="kd">extends</span> <span class="nc">Application</span> <span class="o">{</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/hilt-application-container.png" alt="hilt application container">
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Add Application-Class to manifest.xml</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="xml"><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="nt">&lt;manifest</span> <span class="na">xmlns:android=</span><span class="s">"http://schemas.android.com/apk/res/android"</span>
+    <span class="na">xmlns:tools=</span><span class="s">"http://schemas.android.com/tools"</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;application</span>
+<span class="hll">        <span class="na">android:name=</span><span class="s">".TodoApplication"</span>   <i class="conum" data-value="1"></i><b>(1)</b>
+</span>        <span class="na">android:allowBackup=</span><span class="s">"true"</span>
+        <span class="na">android:dataExtractionRules=</span><span class="s">"@xml/data_extraction_rules"</span>
+        <span class="na">android:fullBackupContent=</span><span class="s">"@xml/backup_rules"</span>
+        <span class="na">android:icon=</span><span class="s">"@mipmap/ic_launcher"</span>
+        <span class="na">android:label=</span><span class="s">"@string/app_name"</span>
+        <span class="na">android:roundIcon=</span><span class="s">"@mipmap/ic_launcher_round"</span>
+        <span class="na">android:supportsRtl=</span><span class="s">"true"</span>
+        <span class="na">android:theme=</span><span class="s">"@style/Theme.Todo"</span>
+        <span class="na">tools:targetApi=</span><span class="s">"31"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;activity</span>
+            <span class="na">android:name=</span><span class="s">".MainActivity"</span>
+            <span class="na">android:exported=</span><span class="s">"true"</span>
+            <span class="na">android:label=</span><span class="s">"@string/app_name"</span>
+            <span class="na">android:theme=</span><span class="s">"@style/Theme.Todo"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;intent-filter&gt;</span>
+                <span class="nt">&lt;action</span> <span class="na">android:name=</span><span class="s">"android.intent.action.MAIN"</span> <span class="nt">/&gt;</span>
+
+                <span class="nt">&lt;category</span> <span class="na">android:name=</span><span class="s">"android.intent.category.LAUNCHER"</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/intent-filter&gt;</span>
+        <span class="nt">&lt;/activity&gt;</span>
+    <span class="nt">&lt;/application&gt;</span>
+
+<span class="nt">&lt;/manifest&gt;</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Add here the name of the Hilt Application Class</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_androidentrypoint"><a class="anchor" href="#_androidentrypoint"></a>5.2. @AndroidEntryPoint</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Once Hilt is set up in your Application class and an application-level component is available, Hilt can provide dependencies to other Android classes that have the @AndroidEntryPoint annotation.</p>
+</li>
+<li>
+<p><a href="https://developer.android.com/training/dependency-injection/hilt-android#android-classes" target="_blank" rel="noopener">Inject dependencies into Android classes</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">at.htl.todo.MainActivity</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">package</span> <span class="nn">at.htl.todo</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">android.os.Bundle</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">androidx.activity.ComponentActivity</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.inject.Inject</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">at.htl.todo.ui.layout.MainView</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">dagger.hilt.android.AndroidEntryPoint</span><span class="o">;</span>
+
+<span class="nd">@AndroidEntryPoint</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="nc">ComponentActivity</span> <span class="o">{</span>
+
+    <span class="nd">@Inject</span>
+    <span class="nc">MainView</span> <span class="n">mainView</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="nc">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+        <span class="n">mainView</span><span class="o">.</span><span class="na">buildContent</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>at.htl.todo.ui.layout.MainView</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="k">package</span> <span class="nn">at.htl.todo.ui.layout</span>
+
+<span class="k">import</span> <span class="nn">androidx.activity.ComponentActivity</span>
+<span class="k">import</span> <span class="nn">androidx.activity.compose.setContent</span>
+<span class="k">import</span> <span class="nn">androidx.activity.enableEdgeToEdge</span>
+<span class="k">import</span> <span class="nn">androidx.compose.foundation.layout.fillMaxSize</span>
+<span class="k">import</span> <span class="nn">androidx.compose.foundation.layout.padding</span>
+<span class="k">import</span> <span class="nn">androidx.compose.material3.Scaffold</span>
+<span class="k">import</span> <span class="nn">androidx.compose.material3.Text</span>
+<span class="k">import</span> <span class="nn">androidx.compose.runtime.Composable</span>
+<span class="k">import</span> <span class="nn">androidx.compose.ui.Modifier</span>
+<span class="k">import</span> <span class="nn">androidx.compose.ui.platform.ComposeView</span>
+<span class="k">import</span> <span class="nn">androidx.compose.ui.tooling.preview.Preview</span>
+<span class="k">import</span> <span class="nn">at.htl.todo.ui.theme.TodoTheme</span>
+<span class="k">import</span> <span class="nn">javax.inject.Inject</span>
+<span class="k">import</span> <span class="nn">javax.inject.Singleton</span>
+
+<span class="nd">@Singleton</span>
+<span class="kd">class</span> <span class="nc">MainView</span> <span class="p">{</span>
+
+    <span class="nd">@Inject</span>
+    <span class="k">constructor</span><span class="p">(){}</span>
+
+    <span class="k">fun</span> <span class="nf">buildContent</span><span class="p">(</span><span class="n">activity</span><span class="p">:</span> <span class="nc">ComponentActivity</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">activity</span><span class="p">.</span><span class="nf">enableEdgeToEdge</span><span class="p">()</span>
+        <span class="n">activity</span><span class="p">.</span><span class="nf">setContent</span> <span class="p">{</span>
+            <span class="nc">TodoTheme</span> <span class="p">{</span>
+                <span class="nc">Scaffold</span><span class="p">(</span><span class="n">modifier</span> <span class="p">=</span> <span class="nc">Modifier</span><span class="p">.</span><span class="nf">fillMaxSize</span><span class="p">())</span> <span class="p">{</span> <span class="n">innerPadding</span> <span class="p">-&gt;</span>
+                    <span class="nc">Greeting</span><span class="p">(</span>
+                        <span class="n">name</span> <span class="p">=</span> <span class="s">"Android"</span><span class="p">,</span>
+                        <span class="n">modifier</span> <span class="p">=</span> <span class="nc">Modifier</span><span class="p">.</span><span class="nf">padding</span><span class="p">(</span><span class="n">innerPadding</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@Composable</span>
+<span class="k">fun</span> <span class="nf">Greeting</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nc">String</span><span class="p">,</span> <span class="n">modifier</span><span class="p">:</span> <span class="nc">Modifier</span> <span class="p">=</span> <span class="nc">Modifier</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nc">Text</span><span class="p">(</span>
+        <span class="n">text</span> <span class="p">=</span> <span class="s">"Hello $name!"</span><span class="p">,</span>
+        <span class="n">modifier</span> <span class="p">=</span> <span class="n">modifier</span>
+    <span class="p">)</span>
+<span class="p">}</span>
+
+<span class="nd">@Preview</span><span class="p">(</span><span class="n">showBackground</span> <span class="p">=</span> <span class="k">true</span><span class="p">)</span>
+<span class="nd">@Composable</span>
+<span class="k">fun</span> <span class="nf">GreetingPreview</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nc">TodoTheme</span> <span class="p">{</span>
+        <span class="nc">Greeting</span><span class="p">(</span><span class="s">"Android"</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1<br>
-Last updated 2024-05-08 15:03:57 UTC
+Last updated 2024-05-09 07:03:18 UTC
 </div>
 </div>
 </body>
