@@ -19,7 +19,7 @@ ifdef::backend-html5[]
 // https://fontawesome.com/v4.7.0/icons/
 icon:file-text-o[link=https://raw.githubusercontent.com/htl-leonding-college/android-reactive-java-todo/main/asciidocs/docs/{docname}.adoc] ‏ ‏ ‎
 icon:github-square[link=https://github.com/htl-leonding-college/android-reactive-java-todo] ‏ ‏ ‎
-icon:home[link=https://htl-leonding.github.io/]
+icon:home[link=http://edufs.edu.htl-leonding.ac.at/~t.stuetz/hugo/]
 endif::backend-html5[]
 
 // print the toc here (not at the default position)
@@ -888,6 +888,8 @@ image::store-app-started.png[]
 
 
 == Add REST-Client
+
+INFO: You could also use https://square.github.io/retrofit/[Retrofit^]
 
 image::rest-client-project-tree.png[]
 
