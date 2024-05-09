@@ -18,7 +18,7 @@ ifdef::backend-html5[]
 
 // https://fontawesome.com/v4.7.0/icons/
 icon:file-text-o[link=https://raw.githubusercontent.com/htl-leonding-college/android-reactive-java-todo/main/asciidocs/docs/{docname}.adoc] ‏ ‏ ‎
-icon:github-square[link=https://github.com/htl-leonding-college/android-reactive-java-todo^] ‏ ‏ ‎
+icon:github-square[link=https://github.com/htl-leonding-college/android-reactive-java-todo] ‏ ‏ ‎
 icon:home[link=https://htl-leonding.github.io/]
 endif::backend-html5[]
 
@@ -27,7 +27,7 @@ toc::[]
 
 == Prerequisites - What students have to prepare
 
-* OS for developing
+* install Android Studio
 
 == Reactive in Android
 
@@ -233,6 +233,8 @@ image::hilt-error-name-in-manifest.png[]
 * We create a new class `TodoApplication.java` as application entry point.
 * This class is now our https://developer.android.com/training/dependency-injection/hilt-android#application-class[application-level dependency container^].
 
+image::hilt-application-container.png[]
+
 .at.htl.todo.TodoApplication
 [source,java]
 ----
@@ -248,7 +250,36 @@ public class TodoApplication extends Application {
 }
 ----
 
-image::hilt-application-container.png[]
+* To check, if it is working, we use the Android - Logger
+
+.at.htl.todo.TodoApplication with logging
+[source,java]
+----
+package at.htl.todo;
+
+import android.app.Application;
+import javax.inject.Singleton;
+import dagger.hilt.android.HiltAndroidApp;
+
+@HiltAndroidApp
+@Singleton
+public class TodoApplication extends Application {
+
+    static final String TAG = TodoApplication.class.getSimpleName();  // <.>
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.i(TAG, "App started ..."); // <.>
+    }
+
+}
+----
+
+<.> Declare always the Logging-Tag
+<.> Use the logging
+
+
 
 
 .Add Application-Class to manifest.xml
@@ -287,37 +318,19 @@ image::hilt-application-container.png[]
 
 <.> Add here the name of the Hilt Application Class
 
+.View in Logcat
+image::hilt-log-app-started.png[]
 
-=== @AndroidEntryPoint
+
+
+=== @AndroidEntryPoint and Hilt Bindings
 
 * Once Hilt is set up in your Application class and an application-level component is available, Hilt can provide dependencies to other Android classes that have the @AndroidEntryPoint annotation.
 
 * https://developer.android.com/training/dependency-injection/hilt-android#android-classes[Inject dependencies into Android classes^]
 
-.at.htl.todo.MainActivity
-[source,java]
-----
-package at.htl.todo;
+* https://developer.android.com/training/dependency-injection/hilt-android#define-bindings[Define Hilt bindings^]
 
-import android.os.Bundle;
-import androidx.activity.ComponentActivity;
-import javax.inject.Inject;
-import at.htl.todo.ui.layout.MainView;
-import dagger.hilt.android.AndroidEntryPoint;
-
-@AndroidEntryPoint
-public class MainActivity extends ComponentActivity {
-
-    @Inject
-    MainView mainView;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mainView.buildContent(this);
-    }
-}
-----
 
 at.htl.todo.ui.layout.MainView
 [source,kotlin]
@@ -342,7 +355,7 @@ import javax.inject.Singleton
 @Singleton
 class MainView {
 
-    @Inject
+    @Inject // <.>
     constructor(){}
 
     fun buildContent(activity: ComponentActivity) {
@@ -376,6 +389,170 @@ fun GreetingPreview() {
     }
 }
 ----
+
+<.> Constructor injection (there are other ways, if constructor injection is not possible).
+This is constructor injection with a primary constructor
++
+[source,kotlin]
+----
+@Singleton
+class MainView @Inject constructor() {
+    //...
+}
+----
+
+.at.htl.todo.MainActivity
+[source,java]
+----
+package at.htl.todo;
+
+import android.os.Bundle;
+import androidx.activity.ComponentActivity;
+import javax.inject.Inject;
+import at.htl.todo.ui.layout.MainView;
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
+public class MainActivity extends ComponentActivity {
+
+    @Inject
+    MainView mainView;  // <.>
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mainView.buildContent(this);  // <.>
+    }
+}
+----
+
+<.> Now it is possible to inject the Jetpack Compose view
+<.> When calling the kotlin function for building the view, we have to pass the Context of the current activity.
+
+
+image::app-hello-android.png[]
+
+== Add the Util-Classes
+
+* link:files/util.zip[Download these files]
+
+image::utils-project-tree.png[]
+
+=== Immer
+
+// TODO: Fundamentals for working with immutable states (immer)
+
+=== Mapper
+
+// TODO: Fundamentals ObjectMapper
+
+=== MessageBodyWriter / MessageBodyReader
+
+.source: https://www.hameister.org/JEE7_JAXRS2_MesssageBodyReaderWriterList.html[MessageBodyReader und MessageBodyWriter für List- JAX-RS 2.0^]
+image::https://www.hameister.org/images/JEE7_JAXRS_items.png[]
+
+* https://javadoc.io/doc/jakarta.ws.rs/jakarta.ws.rs-api/latest/jakarta.ws.rs/jakarta/ws/rs/ext/MessageBodyReader.html[javadoc: MessageBodyReader^]
+
+* https://javadoc.io/doc/jakarta.ws.rs/jakarta.ws.rs-api/latest/jakarta.ws.rs/jakarta/ws/rs/ext/MessageBodyWriter.html[javadoc: MessageBodyWriter^]
+
+* https://www.examclouds.com/java/web-services/jax-rs-entity-providers[JAX-RS Entity Providers^]
+
+=== Store
+
+// TODO: Fundamentals Reactive Programming
+
+////
+
+=== Add microprofile config
+
+* As in Quarkus we use the https://mvnrepository.com/artifact/io.smallrye.config/smallrye-config/3.8.1[SmallRye Config - Library^] which is following the https://microprofile.io/specifications/microprofile-config/[MicroProfile Config^]
+
+* In the utils we already have a class `ConfigModule.java` for configuring SmallRye config.
+
+image::config-project-tree.png[]
+
+* Now it is possible to config our application in an `application.properties`-file.
++
+.resources/application.properties
+[source,properties]
+----
+json.placeholder.baseurl=https://jsonplaceholder.typicode.com
+----
+
+* microprofile-config.properties is an empty file
+
+////
+
+=== Add Configuration with application.properties
+
+* Because SmallRye Config - Library didn't work, we use the assets - folder
+
+* First create the assets-folder with the `application.properties`-file
++
+image::config-assets-folder-project-tree.png[]
++
+.main/assets/application.properties
+[source,properties]
+----
+json.placeholder.baseurl=https://jsonplaceholder.typicode.com
+----
+
+* The create a java class
++
+.at.htl.todo.util.Config
+[source,java]
+----
+package at.htl.todo.util;
+
+import android.content.Context;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+public class Config {
+    private static Properties properties;
+
+    public static void load(Context context) {
+        try {
+            InputStream inputStream = context.getAssets().open("application.properties");
+            properties = new Properties();
+            properties.load(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String getProperty(String key) {
+        return properties.getProperty(key);
+    }
+}
+----
+
+* Finally use your configration ie in the MainActivity.java
++
+[source,java]
+----
+@AndroidEntryPoint
+public class MainActivity extends ComponentActivity {
+
+    // ...
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Config.load(this);
+        var base_url = Config.getProperty("json.placeholder.baseurl");
+        Log.i(TAG, "onCreate: " + base_url);
+        mainView.buildContent(this);
+    }
+}
+----
+
+image::config-assets-logcat-entry.png[]
+
+
+
 
 
 
