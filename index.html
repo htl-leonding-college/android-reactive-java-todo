@@ -1150,7 +1150,67 @@ This is constructor injection with a primary constructor
 </div>
 <div class="sect2">
 <h3 id="_mapper"><a class="anchor" href="#_mapper"></a>6.2. Mapper</h3>
+<div class="imageblock">
+<div class="content">
+<img src="images/mapper-structure.png" alt="mapper structure">
+</div>
+</div>
+<div class="listingblock">
+<div class="title">at.htl.todo.model.</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">package</span> <span class="nn">at.htl.todo.util.mapper</span><span class="o">;</span>
 
+<span class="kn">import</span> <span class="nn">com.fasterxml.jackson.annotation.JsonAutoDetect</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.fasterxml.jackson.annotation.PropertyAccessor</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.fasterxml.jackson.core.JsonProcessingException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.fasterxml.jackson.databind.DeserializationFeature</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.fasterxml.jackson.databind.ObjectMapper</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.fasterxml.jackson.databind.SerializationFeature</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+
+<span class="cm">/** A Mapper that maps types to their json representation and back.
+ * ... plus a convenient deep-clone function
+ * @param &lt;T&gt; the Class that is mapped
+ */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Mapper</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="no">T</span><span class="o">&gt;</span> <span class="n">clazz</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">ObjectMapper</span> <span class="n">mapper</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Mapper</span><span class="o">(</span><span class="nc">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="no">T</span><span class="o">&gt;</span> <span class="n">clazz</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">clazz</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">;</span>
+        <span class="n">mapper</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ObjectMapper</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">configure</span><span class="o">(</span><span class="nc">SerializationFeature</span><span class="o">.</span><span class="na">INDENT_OUTPUT</span><span class="o">,</span> <span class="kc">true</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">configure</span><span class="o">(</span><span class="nc">DeserializationFeature</span><span class="o">.</span><span class="na">FAIL_ON_UNKNOWN_PROPERTIES</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+        <span class="n">mapper</span><span class="o">.</span><span class="na">setVisibility</span><span class="o">(</span><span class="nc">PropertyAccessor</span><span class="o">.</span><span class="na">FIELD</span><span class="o">,</span> <span class="nc">JsonAutoDetect</span><span class="o">.</span><span class="na">Visibility</span><span class="o">.</span><span class="na">ANY</span><span class="o">);</span> <span class="c1">// records</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">toResource</span><span class="o">(</span><span class="no">T</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">mapper</span><span class="o">.</span><span class="na">writeValueAsString</span><span class="o">(</span><span class="n">model</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">JsonProcessingException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="no">T</span> <span class="nf">fromResource</span><span class="o">(</span><span class="nc">String</span> <span class="n">json</span><span class="o">)</span> <span class="o">{</span>
+        <span class="no">T</span> <span class="n">model</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">readValue</span><span class="o">(</span><span class="n">json</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span> <span class="n">clazz</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">model</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="cm">/** deep clone an object by converting it to its json representation and back.
+     *
+     * @param thing the thing to clone, unchanged
+     * @return the deeply cloned thing
+     */</span>
+    <span class="kd">public</span> <span class="no">T</span> <span class="nf">clone</span><span class="o">(</span><span class="kd">final</span> <span class="no">T</span> <span class="n">thing</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="nf">fromResource</span><span class="o">(</span><span class="n">toResource</span><span class="o">(</span><span class="n">thing</span><span class="o">));</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_messagebodywriter_messagebodyreader"><a class="anchor" href="#_messagebodywriter_messagebodyreader"></a>6.3. MessageBodyWriter / MessageBodyReader</h3>
@@ -1259,6 +1319,25 @@ This is constructor injection with a primary constructor
 <div class="content">
 <img src="images/config-assets-logcat-entry.png" alt="config assets logcat entry">
 </div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Because this always needs a context, it is not usable in context-free services.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/smallrye/smallrye-config/issues/1057" target="_blank" rel="noopener">Retrieving a SmallRyeConfig instance fails on Android</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -1616,12 +1695,6 @@ This is constructor injection with a primary constructor
 <pre class="rouge highlight"><code data-lang="java"></code></pre>
 </div>
 </div>
-<div class="listingblock">
-<div class="title">at.htl.todo.model.</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="java"></code></pre>
-</div>
-</div>
 <div class="imageblock">
 <div class="content">
 <img src="images/rest-client-app-started.png" alt="rest client app started">
@@ -1633,7 +1706,7 @@ This is constructor injection with a primary constructor
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1<br>
-Last updated 2024-05-09 17:12:41 UTC
+Last updated 2024-05-09 17:33:04 UTC
 </div>
 </div>
 </body>
