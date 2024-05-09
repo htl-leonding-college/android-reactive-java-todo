@@ -704,11 +704,11 @@ As kapt is in maintenance mode, we use KSP
         <span class="p">}</span>
     <span class="p">}</span>
     <span class="nf">compileOptions</span> <span class="p">{</span>
-        <span class="n">sourceCompatibility</span> <span class="p">=</span> <span class="nc">JavaVersion</span><span class="p">.</span><span class="nc">VERSION_21</span>
-        <span class="n">targetCompatibility</span> <span class="p">=</span> <span class="nc">JavaVersion</span><span class="p">.</span><span class="nc">VERSION_21</span>
+        <span class="n">sourceCompatibility</span> <span class="p">=</span> <span class="nc">JavaVersion</span><span class="p">.</span><span class="nc">VERSION_17</span>
+        <span class="n">targetCompatibility</span> <span class="p">=</span> <span class="nc">JavaVersion</span><span class="p">.</span><span class="nc">VERSION_17</span>
     <span class="p">}</span>
     <span class="nf">kotlinOptions</span> <span class="p">{</span>
-        <span class="n">jvmTarget</span> <span class="p">=</span> <span class="s">"21"</span>
+        <span class="n">jvmTarget</span> <span class="p">=</span> <span class="s">"17"</span>
     <span class="p">}</span>
     <span class="nf">buildFeatures</span> <span class="p">{</span>
         <span class="n">compose</span> <span class="p">=</span> <span class="k">true</span>
@@ -747,6 +747,8 @@ As kapt is in maintenance mode, we use KSP
 
     <span class="c1">// RxJava</span>
     <span class="nf">implementation</span> <span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">rxjava</span><span class="p">)</span>
+    <span class="nf">implementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">rxandroid</span><span class="p">)</span>
+    <span class="nf">implementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">androidx</span><span class="p">.</span><span class="n">runtime</span><span class="p">.</span><span class="n">rxjava3</span><span class="p">)</span>
 
     <span class="c1">// Hilt</span>
     <span class="nf">implementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">hilt</span><span class="p">.</span><span class="n">android</span><span class="p">)</span>
@@ -757,6 +759,8 @@ As kapt is in maintenance mode, we use KSP
 
     <span class="c1">// Resteasy</span>
     <span class="nf">implementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">resteasy</span><span class="p">.</span><span class="n">client</span><span class="p">)</span>
+
+    <span class="c1">// SmallRye Config</span>
     <span class="c1">//implementation("org.eclipse.microprofile.config:microprofile-config-api:3.1") // for application.properties config loader</span>
     <span class="nf">implementation</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="n">smallrye</span><span class="p">.</span><span class="n">config</span><span class="p">)</span>
 
@@ -800,6 +804,8 @@ As kapt is in maintenance mode, we use KSP
 <span class="py">composeBom</span> <span class="p">=</span> <span class="s">"2024.05.00"</span>
 <span class="py">resteasyClient</span> <span class="p">=</span> <span class="s">"6.2.8.Final"</span>
 <span class="py">rxjavaVersion</span> <span class="p">=</span> <span class="s">"3.1.8"</span>
+<span class="py">rxandroid</span> <span class="p">=</span> <span class="s">"3.0.2"</span>
+<span class="py">runtimeRxjava3</span> <span class="p">=</span> <span class="s">"1.6.7"</span>
 <span class="py">ksp</span> <span class="p">=</span> <span class="s">"1.9.23-1.0.20"</span>
 <span class="py">smallryeConfig</span> <span class="p">=</span> <span class="s">"3.8.1"</span>
 
@@ -823,6 +829,8 @@ As kapt is in maintenance mode, we use KSP
 <span class="nn">androidx-material3</span> <span class="o">=</span> <span class="p">{</span> <span class="py">group</span> <span class="p">=</span> <span class="s">"androidx.compose.material3"</span><span class="p">,</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"material3"</span> <span class="p">}</span>
 <span class="nn">resteasy-client</span> <span class="o">=</span> <span class="p">{</span> <span class="py">module</span> <span class="p">=</span> <span class="s">"org.jboss.resteasy:resteasy-client"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"resteasyClient"</span> <span class="p">}</span>
 <span class="nn">rxjava</span> <span class="o">=</span> <span class="p">{</span> <span class="py">module</span> <span class="p">=</span> <span class="s">"io.reactivex.rxjava3:rxjava"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"rxjavaVersion"</span> <span class="p">}</span>
+<span class="nn">rxandroid</span> <span class="o">=</span> <span class="p">{</span> <span class="py">module</span> <span class="p">=</span> <span class="s">"io.reactivex.rxjava3:rxandroid"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"rxandroid"</span> <span class="p">}</span>
+<span class="nn">androidx-runtime-rxjava3</span> <span class="o">=</span> <span class="p">{</span> <span class="py">module</span> <span class="p">=</span> <span class="s">"androidx.compose.runtime:runtime-rxjava3"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"runtimeRxjava3"</span> <span class="p">}</span>
 <span class="nn">smallrye-config</span> <span class="o">=</span> <span class="p">{</span> <span class="py">module</span> <span class="p">=</span> <span class="s">"io.smallrye.config:smallrye-config"</span><span class="p">,</span> <span class="py">version.ref</span> <span class="p">=</span> <span class="s">"smallryeConfig"</span> <span class="p">}</span>
 
 <span class="nn">[plugins]</span>
@@ -1625,7 +1633,7 @@ This is constructor injection with a primary constructor
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1<br>
-Last updated 2024-05-09 17:06:19 UTC
+Last updated 2024-05-09 17:12:41 UTC
 </div>
 </div>
 </body>
