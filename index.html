@@ -573,7 +573,16 @@ pre.rouge .gs {
 <li><a href="#_separate_java_business_classes_and_kotlin_compose_classes">5. Separate Java-Business-Classes and Kotlin-Compose-Classes</a>
 <ul class="sectlevel2">
 <li><a href="#_configure_hilt_add_hilt_application_class">5.1. Configure Hilt - Add Hilt Application Class</a></li>
-<li><a href="#_androidentrypoint">5.2. @AndroidEntryPoint</a></li>
+<li><a href="#_androidentrypoint_and_hilt_bindings">5.2. @AndroidEntryPoint and Hilt Bindings</a></li>
+</ul>
+</li>
+<li><a href="#_add_the_util_classes">6. Add the Util-Classes</a>
+<ul class="sectlevel2">
+<li><a href="#_immer">6.1. Immer</a></li>
+<li><a href="#_mapper">6.2. Mapper</a></li>
+<li><a href="#_messagebodywriter_messagebodyreader">6.3. MessageBodyWriter / MessageBodyReader</a></li>
+<li><a href="#_store">6.4. Store</a></li>
+<li><a href="#_add_configuration_with_application_properties">6.5. Add Configuration with application.properties</a></li>
 </ul>
 </li>
 </ul>
@@ -584,7 +593,7 @@ pre.rouge .gs {
 <div class="sectionbody">
 <div class="paragraph">
 <p><span class="icon"><a class="image" href="https://raw.githubusercontent.com/htl-leonding-college/android-reactive-java-todo/main/asciidocs/docs/index.adoc"><i class="fa fa-file-text-o"></i></a></span> ‏ ‏ ‎
-<span class="icon"><a class="image" href="https://github.com/htl-leonding-college/android-reactive-java-todo^"><i class="fa fa-github-square"></i></a></span> ‏ ‏ ‎
+<span class="icon"><a class="image" href="https://github.com/htl-leonding-college/android-reactive-java-todo"><i class="fa fa-github-square"></i></a></span> ‏ ‏ ‎
 <span class="icon"><a class="image" href="https://htl-leonding.github.io/"><i class="fa fa-home"></i></a></span></p>
 </div>
 <!-- toc disabled -->
@@ -596,7 +605,7 @@ pre.rouge .gs {
 <div class="ulist">
 <ul>
 <li>
-<p>OS for developing</p>
+<p>install Android Studio</p>
 </li>
 </ul>
 </div>
@@ -863,6 +872,11 @@ As kapt is in maintenance mode, we use KSP
 </li>
 </ul>
 </div>
+<div class="imageblock">
+<div class="content">
+<img src="images/hilt-application-container.png" alt="hilt application container">
+</div>
+</div>
 <div class="listingblock">
 <div class="title">at.htl.todo.TodoApplication</div>
 <div class="content">
@@ -878,10 +892,48 @@ As kapt is in maintenance mode, we use KSP
 <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="imageblock">
-<div class="content">
-<img src="images/hilt-application-container.png" alt="hilt application container">
+<div class="ulist">
+<ul>
+<li>
+<p>To check, if it is working, we use the Android - Logger</p>
+</li>
+</ul>
 </div>
+<div class="listingblock">
+<div class="title">at.htl.todo.TodoApplication with logging</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">package</span> <span class="nn">at.htl.todo</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">android.app.Application</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.inject.Singleton</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">dagger.hilt.android.HiltAndroidApp</span><span class="o">;</span>
+
+<span class="nd">@HiltAndroidApp</span>
+<span class="nd">@Singleton</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TodoApplication</span> <span class="kd">extends</span> <span class="nc">Application</span> <span class="o">{</span>
+
+    <span class="kd">static</span> <span class="kd">final</span> <span class="nc">String</span> <span class="no">TAG</span> <span class="o">=</span> <span class="nc">TodoApplication</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getSimpleName</span><span class="o">();</span>  <i class="conum" data-value="1"></i><b>(1)</b>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">();</span>
+        <span class="nc">Log</span><span class="o">.</span><span class="na">i</span><span class="o">(</span><span class="no">TAG</span><span class="o">,</span> <span class="s">"App started ..."</span><span class="o">);</span> <i class="conum" data-value="2"></i><b>(2)</b>
+    <span class="o">}</span>
+
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Declare always the Logging-Tag</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Use the logging</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="title">Add Application-Class to manifest.xml</div>
@@ -925,9 +977,15 @@ As kapt is in maintenance mode, we use KSP
 </tr>
 </table>
 </div>
+<div class="imageblock">
+<div class="content">
+<img src="images/hilt-log-app-started.png" alt="hilt log app started">
+</div>
+<div class="title">Figure 1. View in Logcat</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_androidentrypoint"><a class="anchor" href="#_androidentrypoint"></a>5.2. @AndroidEntryPoint</h3>
+<h3 id="_androidentrypoint_and_hilt_bindings"><a class="anchor" href="#_androidentrypoint_and_hilt_bindings"></a>5.2. @AndroidEntryPoint and Hilt Bindings</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -936,32 +994,10 @@ As kapt is in maintenance mode, we use KSP
 <li>
 <p><a href="https://developer.android.com/training/dependency-injection/hilt-android#android-classes" target="_blank" rel="noopener">Inject dependencies into Android classes</a></p>
 </li>
+<li>
+<p><a href="https://developer.android.com/training/dependency-injection/hilt-android#define-bindings" target="_blank" rel="noopener">Define Hilt bindings</a></p>
+</li>
 </ul>
-</div>
-<div class="listingblock">
-<div class="title">at.htl.todo.MainActivity</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kn">package</span> <span class="nn">at.htl.todo</span><span class="o">;</span>
-
-<span class="kn">import</span> <span class="nn">android.os.Bundle</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">androidx.activity.ComponentActivity</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">javax.inject.Inject</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">at.htl.todo.ui.layout.MainView</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">dagger.hilt.android.AndroidEntryPoint</span><span class="o">;</span>
-
-<span class="nd">@AndroidEntryPoint</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="nc">ComponentActivity</span> <span class="o">{</span>
-
-    <span class="nd">@Inject</span>
-    <span class="nc">MainView</span> <span class="n">mainView</span><span class="o">;</span>
-
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="nc">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
-        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
-        <span class="n">mainView</span><span class="o">.</span><span class="na">buildContent</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}</span></code></pre>
-</div>
 </div>
 <div class="paragraph">
 <p>at.htl.todo.ui.layout.MainView</p>
@@ -988,7 +1024,7 @@ As kapt is in maintenance mode, we use KSP
 <span class="nd">@Singleton</span>
 <span class="kd">class</span> <span class="nc">MainView</span> <span class="p">{</span>
 
-    <span class="nd">@Inject</span>
+    <span class="nd">@Inject</span> <i class="conum" data-value="1"></i><b>(1)</b>
     <span class="k">constructor</span><span class="p">(){}</span>
 
     <span class="k">fun</span> <span class="nf">buildContent</span><span class="p">(</span><span class="n">activity</span><span class="p">:</span> <span class="nc">ComponentActivity</span><span class="p">)</span> <span class="p">{</span>
@@ -1023,6 +1059,199 @@ As kapt is in maintenance mode, we use KSP
 <span class="p">}</span></code></pre>
 </div>
 </div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Constructor injection (there are other ways, if constructor injection is not possible).
+This is constructor injection with a primary constructor
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="nd">@Singleton</span>
+<span class="kd">class</span> <span class="nc">MainView</span> <span class="nd">@Inject</span> <span class="k">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">//...</span>
+<span class="p">}</span></code></pre>
+</div>
+</div></td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">at.htl.todo.MainActivity</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">package</span> <span class="nn">at.htl.todo</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">android.os.Bundle</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">androidx.activity.ComponentActivity</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.inject.Inject</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">at.htl.todo.ui.layout.MainView</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">dagger.hilt.android.AndroidEntryPoint</span><span class="o">;</span>
+
+<span class="nd">@AndroidEntryPoint</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="nc">ComponentActivity</span> <span class="o">{</span>
+
+    <span class="nd">@Inject</span>
+    <span class="nc">MainView</span> <span class="n">mainView</span><span class="o">;</span>  <i class="conum" data-value="1"></i><b>(1)</b>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="nc">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+        <span class="n">mainView</span><span class="o">.</span><span class="na">buildContent</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>  <i class="conum" data-value="2"></i><b>(2)</b>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Now it is possible to inject the Jetpack Compose view</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>When calling the kotlin function for building the view, we have to pass the Context of the current activity.</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/app-hello-android.png" alt="app hello android">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_add_the_util_classes"><a class="anchor" href="#_add_the_util_classes"></a>6. Add the Util-Classes</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="files/util.zip">Download these files</a></p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/utils-project-tree.png" alt="utils project tree">
+</div>
+</div>
+<div class="sect2">
+<h3 id="_immer"><a class="anchor" href="#_immer"></a>6.1. Immer</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_mapper"><a class="anchor" href="#_mapper"></a>6.2. Mapper</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_messagebodywriter_messagebodyreader"><a class="anchor" href="#_messagebodywriter_messagebodyreader"></a>6.3. MessageBodyWriter / MessageBodyReader</h3>
+<div class="imageblock">
+<div class="content">
+<img src="https://www.hameister.org/images/JEE7_JAXRS_items.png" alt="JEE7 JAXRS items">
+</div>
+<div class="title">Figure 2. source: <a href="https://www.hameister.org/JEE7_JAXRS2_MesssageBodyReaderWriterList.html" target="_blank" rel="noopener">MessageBodyReader und MessageBodyWriter für List- JAX-RS 2.0</a></div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://javadoc.io/doc/jakarta.ws.rs/jakarta.ws.rs-api/latest/jakarta.ws.rs/jakarta/ws/rs/ext/MessageBodyReader.html" target="_blank" rel="noopener">javadoc: MessageBodyReader</a></p>
+</li>
+<li>
+<p><a href="https://javadoc.io/doc/jakarta.ws.rs/jakarta.ws.rs-api/latest/jakarta.ws.rs/jakarta/ws/rs/ext/MessageBodyWriter.html" target="_blank" rel="noopener">javadoc: MessageBodyWriter</a></p>
+</li>
+<li>
+<p><a href="https://www.examclouds.com/java/web-services/jax-rs-entity-providers" target="_blank" rel="noopener">JAX-RS Entity Providers</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_store"><a class="anchor" href="#_store"></a>6.4. Store</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_add_configuration_with_application_properties"><a class="anchor" href="#_add_configuration_with_application_properties"></a>6.5. Add Configuration with application.properties</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Because SmallRye Config - Library didn&#8217;t work, we use the assets - folder</p>
+</li>
+<li>
+<p>First create the assets-folder with the <code>application.properties</code>-file</p>
+<div class="imageblock">
+<div class="content">
+<img src="images/config-assets-folder-project-tree.png" alt="config assets folder project tree">
+</div>
+</div>
+<div class="listingblock">
+<div class="title">main/assets/application.properties</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="properties"><span class="py">json.placeholder.baseurl</span><span class="p">=</span><span class="s">https://jsonplaceholder.typicode.com</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>The create a java class</p>
+<div class="listingblock">
+<div class="title">at.htl.todo.util.Config</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">package</span> <span class="nn">at.htl.todo.util</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">android.content.Context</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStream</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Properties</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Config</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="nc">Properties</span> <span class="n">properties</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">load</span><span class="o">(</span><span class="nc">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="nc">InputStream</span> <span class="n">inputStream</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getAssets</span><span class="o">().</span><span class="na">open</span><span class="o">(</span><span class="s">"application.properties"</span><span class="o">);</span>
+            <span class="n">properties</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Properties</span><span class="o">();</span>
+            <span class="n">properties</span><span class="o">.</span><span class="na">load</span><span class="o">(</span><span class="n">inputStream</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="nc">String</span> <span class="nf">getProperty</span><span class="o">(</span><span class="nc">String</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">properties</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Finally use your configration ie in the MainActivity.java</p>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="nd">@AndroidEntryPoint</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="nc">ComponentActivity</span> <span class="o">{</span>
+
+    <span class="c1">// ...</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="nc">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+        <span class="nc">Config</span><span class="o">.</span><span class="na">load</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+        <span class="kt">var</span> <span class="n">base_url</span> <span class="o">=</span> <span class="nc">Config</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">"json.placeholder.baseurl"</span><span class="o">);</span>
+        <span class="nc">Log</span><span class="o">.</span><span class="na">i</span><span class="o">(</span><span class="no">TAG</span><span class="o">,</span> <span class="s">"onCreate: "</span> <span class="o">+</span> <span class="n">base_url</span><span class="o">);</span>
+        <span class="n">mainView</span><span class="o">.</span><span class="na">buildContent</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/config-assets-logcat-entry.png" alt="config assets logcat entry">
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1030,7 +1259,7 @@ As kapt is in maintenance mode, we use KSP
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1<br>
-Last updated 2024-05-09 07:03:18 UTC
+Last updated 2024-05-09 10:55:53 UTC
 </div>
 </div>
 </body>
