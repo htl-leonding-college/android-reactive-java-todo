@@ -21,6 +21,7 @@ import dagger.hilt.components.SingletonComponent;
 import io.smallrye.config.PropertiesConfigSource;
 import io.smallrye.config.SmallRyeConfigBuilder;
 
+@Deprecated
 @Module
 @InstallIn(SingletonComponent.class)
 public class ConfigModule {
