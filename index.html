@@ -946,15 +946,17 @@ As kapt is in maintenance mode, we use KSP
 </table>
 </div>
 <div class="listingblock">
-<div class="title">Add Application-Class to manifest.xml</div>
+<div class="title">Add Application-Class and Internet-Access to <code>manifest.xml</code></div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="xml"><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
 <span class="nt">&lt;manifest</span> <span class="na">xmlns:android=</span><span class="s">"http://schemas.android.com/apk/res/android"</span>
     <span class="na">xmlns:tools=</span><span class="s">"http://schemas.android.com/tools"</span><span class="nt">&gt;</span>
 
-    <span class="nt">&lt;application</span>
-<span class="hll">        <span class="na">android:name=</span><span class="s">".TodoApplication"</span>   <i class="conum" data-value="1"></i><b>(1)</b>
-</span>        <span class="na">android:allowBackup=</span><span class="s">"true"</span>
+    <span class="nt">&lt;uses-permission</span> <span class="na">android:name=</span><span class="s">"android.permission.INTERNET"</span> <span class="nt">/&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
+<span class="hll">
+</span>    <span class="nt">&lt;application</span>
+        <span class="na">android:name=</span><span class="s">".TodoApplication"</span>   <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="na">android:allowBackup=</span><span class="s">"true"</span>
         <span class="na">android:dataExtractionRules=</span><span class="s">"@xml/data_extraction_rules"</span>
         <span class="na">android:fullBackupContent=</span><span class="s">"@xml/backup_rules"</span>
         <span class="na">android:icon=</span><span class="s">"@mipmap/ic_launcher"</span>
@@ -983,6 +985,10 @@ As kapt is in maintenance mode, we use KSP
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Add here the permission for internet access</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
 <td>Add here the name of the Hilt Application Class</td>
 </tr>
 </table>
@@ -1709,7 +1715,7 @@ Because this always needs a context, it is not usable in context-free services.
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1<br>
-Last updated 2024-05-09 17:53:31 UTC
+Last updated 2024-05-20 07:40:24 UTC
 </div>
 </div>
 </body>
