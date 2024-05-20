@@ -968,31 +968,27 @@ public class TodoService {
 
 ----
 
+=== Add Exception Handling
 
+* When the result of the access to the rest-endpoint is empty and there is no error in Logcat, it is recommended not to swallow the error message (you should NEVER swallow an error message).
 
-.at.htl.todo.model.
+.at.htl.todo.model.TodoService
 [source,java]
 ----
-
+public void getAll() {
+    CompletableFuture
+            .supplyAsync(() -> todoClient.all())
+            .thenAccept(store::setTodos)
+            .exceptionally((e) -> {  // <.>
+                Log.e(TAG, "Error loading todos", e);
+                return null;
+            });
+}
 ----
 
+<.> add here the exception handling
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+image::internet-access-error.png[]
 
 
 
