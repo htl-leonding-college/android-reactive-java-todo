@@ -586,7 +586,11 @@ pre.rouge .gs {
 </ul>
 </li>
 <li><a href="#_add_the_model_and_store">7. Add the Model and Store</a></li>
-<li><a href="#_add_rest_client">8. Add REST-Client</a></li>
+<li><a href="#_add_rest_client">8. Add REST-Client</a>
+<ul class="sectlevel2">
+<li><a href="#_add_exception_handling">8.1. Add Exception Handling</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -1698,10 +1702,40 @@ Because this always needs a context, it is not usable in context-free services.
 <span class="o">}</span></code></pre>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_add_exception_handling"><a class="anchor" href="#_add_exception_handling"></a>8.1. Add Exception Handling</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>When the result of the access to the rest-endpoint is empty and there is no error in Logcat, it is recommended not to swallow the error message (you should NEVER swallow an error message).</p>
+</li>
+</ul>
+</div>
 <div class="listingblock">
-<div class="title">at.htl.todo.model.</div>
+<div class="title">at.htl.todo.model.TodoService</div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"></code></pre>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">getAll</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nc">CompletableFuture</span>
+            <span class="o">.</span><span class="na">supplyAsync</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="n">todoClient</span><span class="o">.</span><span class="na">all</span><span class="o">())</span>
+            <span class="o">.</span><span class="na">thenAccept</span><span class="o">(</span><span class="nl">store:</span><span class="o">:</span><span class="n">setTodos</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">exceptionally</span><span class="o">((</span><span class="n">e</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>  <i class="conum" data-value="1"></i><b>(1)</b>
+                <span class="nc">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="no">TAG</span><span class="o">,</span> <span class="s">"Error loading todos"</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+                <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="o">});</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>add here the exception handling</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/internet-access-error.png" alt="internet access error">
 </div>
 </div>
 <div class="imageblock">
@@ -1712,10 +1746,11 @@ Because this always needs a context, it is not usable in context-free services.
 </div>
 </div>
 </div>
+</div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1<br>
-Last updated 2024-05-20 07:40:24 UTC
+Last updated 2024-05-20 07:49:56 UTC
 </div>
 </div>
 </body>
