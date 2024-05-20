@@ -289,12 +289,14 @@ public class TodoApplication extends Application {
 
 
 
-.Add Application-Class to manifest.xml
+.Add Application-Class and Internet-Access to `manifest.xml`
 [source,xml,highlight=6]
 ----
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" /> <.>
 
     <application
         android:name=".TodoApplication"   <.>
@@ -323,6 +325,7 @@ public class TodoApplication extends Application {
 </manifest>
 ----
 
+<.> Add here the permission for internet access
 <.> Add here the name of the Hilt Application Class
 
 .View in Logcat

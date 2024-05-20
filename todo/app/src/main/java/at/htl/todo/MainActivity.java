@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.activity.ComponentActivity;
+import androidx.annotation.Nullable;
 
 import javax.inject.Inject;
 
@@ -28,7 +29,7 @@ public class MainActivity extends ComponentActivity {
     TodoService todoService;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        String url = config.xml.getValue("json.placeholder.baseurl", String.class);
 //        Log.i(TAG, "onCreate: " + url);
