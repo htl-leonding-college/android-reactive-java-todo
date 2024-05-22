@@ -1,4 +1,4 @@
-package at.htl.todo.util;
+package at.htl.todo.util.config;
 
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.spi.ConfigSource;
@@ -21,7 +21,6 @@ import dagger.hilt.components.SingletonComponent;
 import io.smallrye.config.PropertiesConfigSource;
 import io.smallrye.config.SmallRyeConfigBuilder;
 
-@Deprecated
 @Module
 @InstallIn(SingletonComponent.class)
 public class ConfigModule {

@@ -11,7 +11,7 @@ import javax.inject.Inject;
 
 import at.htl.todo.model.TodoService;
 import at.htl.todo.ui.layout.MainView;
-import at.htl.todo.util.Config;
+import at.htl.todo.util.config.Config;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -31,11 +31,11 @@ public class MainActivity extends ComponentActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        String url = config.xml.getValue("json.placeholder.baseurl", String.class);
-//        Log.i(TAG, "onCreate: " + url);
+
         Config.load(this);
         var base_url = Config.getProperty("json.placeholder.baseurl");
         Log.i(TAG, "onCreate: " + base_url);
+
         mainView.buildContent(this);
         todoService.getAll();
     }
